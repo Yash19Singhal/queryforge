@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import type { SQLDialect, TableSchema } from "@/types";
-import { useOptimizer } from "@/hooks/useOptimizer";
-import { useHistory } from "@/hooks/useHistory";
-import StatsPanel from "@/components/StatsPanel";
-import AnalysisTabs from "@/components/AnalysisTabs";
-import SchemaInput from "@/components/SchemaInput";
-import HistoryPanel from "@/components/HistoryPanel";
+import type { SQLDialect, TableSchema } from "../types";
+import { useOptimizer } from "../hooks/useOptimizer";
+import { useHistory } from "../hooks/useHistory";
+import StatsPanel from "../components/StatsPanel";
+import AnalysisTabs from "../components/AnalysisTabs";
+import SchemaInput from "../components/SchemaInput";
+import HistoryPanel from "../components/HistoryPanel";
 
 const DIALECTS: { key: SQLDialect; label: string }[] = [
   { key: "postgresql", label: "PostgreSQL" },

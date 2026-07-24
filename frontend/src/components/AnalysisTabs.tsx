@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import type { OptimizationApplied, IndexSuggestion, QueryPlanNode } from "@/types";
+import type { OptimizationApplied, IndexSuggestion, QueryPlanNode } from "../types";
 import QueryPlan from "./QueryPlan";
 
 interface AnalysisTabsProps {

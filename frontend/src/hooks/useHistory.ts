@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { HistoryEntry, SQLDialect } from "@/types";
+import type { HistoryEntry, SQLDialect } from "../types";
 
 const STORAGE_KEY = "queryforge_history";
 const MAX_HISTORY = 50;

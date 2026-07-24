@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { ComplexityResult, PerformanceGain, RowsScanned, Bottleneck, CostEstimate } from "@/types";
+import type { ComplexityResult, PerformanceGain, RowsScanned, Bottleneck, CostEstimate } from "../types";
 import PixelProgress from "./PixelProgress";
 
 interface StatsPanelProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { HistoryEntry } from "@/types";
+import type { HistoryEntry } from "../types";
 
 interface HistoryPanelProps {
   isOpen: boolean;

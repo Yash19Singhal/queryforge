@@ -5,8 +5,8 @@ import type {
   OptimizeResponse,
   SQLDialect,
   TableSchema,
-} from "@/types";
-import { optimizeQuery, formatQuery } from "@/lib/api";
+} from "../types";
+import { optimizeQuery, formatQuery } from "../lib/api";
 
 interface UseOptimizerReturn {
   result: OptimizeResponse | null;

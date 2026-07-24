@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import type { TableSchema, ColumnDefinition, IndexDefinition } from "@/types";
+import type { TableSchema, ColumnDefinition, IndexDefinition } from "../types";
 
 interface SchemaInputProps {
   schema: TableSchema[];

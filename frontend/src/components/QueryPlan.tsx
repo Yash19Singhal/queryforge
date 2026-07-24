@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import type { QueryPlanNode } from "@/types";
+import type { QueryPlanNode } from "../types";
 
 interface QueryPlanProps {
   plan: QueryPlanNode;
