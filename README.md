@@ -10,6 +10,119 @@
 
 ---
 
+## 🎤 2-Minute Interview Pitch — "Tell me about this project"
+
+> *Use this word-for-word or paraphrase it. Aim for 90–120 seconds.*
+
+"So I built QueryForge — a SQL Query Optimizer. The core idea came from a real problem: most developers write SQL that works, but not SQL that performs. When your table has a hundred rows it doesn't matter, but at a million rows a poorly written query can bring your entire app to a crawl — and most developers have no idea why.
+
+The way it works is: you paste any SQL query, and the backend parses it into an Abstract Syntax Tree — basically a tree representation of the query's structure. Then I run 12 optimization rules against that tree. Some rules actually rewrite the SQL — for example, converting a subquery inside a WHERE clause into a JOIN, which is typically far more efficient. Others detect anti-patterns like leading wildcards in LIKE statements or functions on indexed columns that silently prevent index usage.
+
+What makes it different from a basic linter is the depth of analysis. I built a cost estimation engine that assigns relative costs to operations — full table scans, index lookups, hash joins, sort operations — and shows you a before-and-after comparison. I also built an interactive query execution plan visualizer that shows exactly how the database processes your query step by step, and an index advisor that looks at your WHERE, JOIN, and ORDER BY columns and generates ready-to-run CREATE INDEX statements.
+
+On the frontend I used Next.js with a retro arcade theme, and the backend is FastAPI with sqlglot for parsing. It supports PostgreSQL, MySQL, and SQLite, and the whole thing is deployed on Render. I have 27 passing tests covering the parser, all 12 rules, the cost model, and the API endpoints.
+
+The reason I'm proud of this project is that it's not a CRUD app — it shows I understand what happens inside a database, not just how to use one."
+
+---
+
+## 🌍 Real World Problem — What This Actually Solves
+
+### The Problem Every Developer Hits
+
+When you're learning to write SQL or building your first app, your database has maybe a few hundred rows. Everything feels instant. So you write queries like this and move on:
+
+```sql
+SELECT * FROM users WHERE LOWER(email) = 'user@test.com'
+```
+
+This works perfectly — until your users table has 2 million rows. Now this query takes **8 seconds** instead of 8 milliseconds, your users see a loading spinner, your server CPU spikes, and you have no idea why.
+
+**That's the real-world problem.** Slow SQL is one of the most common performance issues in production applications, and it's almost invisible during development.
+
+---
+
+### Why It's Hard to Catch
+
+| Stage | Why you miss it |
+|-------|----------------|
+| **Development** | You have 100 rows. Everything is fast. |
+| **Code review** | Reviewers check logic, not query plans. |
+| **Testing** | Test databases are tiny. No slowdown. |
+| **Production** | 1M+ rows. Query takes 10s. Users complain. |
+
+By the time you find out the query is slow, it's already in production causing real damage.
+
+---
+
+### What QueryForge Does About It
+
+QueryForge brings **database-level feedback to the developer** before code reaches production. It works like a code linter, but for SQL performance.
+
+**Example 1 — The function trap:**
+```sql
+-- Developer writes this thinking it's fine:
+WHERE LOWER(email) = 'user@test.com'
+
+-- QueryForge catches it:
+-- ⚠️ LOWER() is applied to every row before comparison.
+-- Even with an index on `email`, it cannot be used.
+-- FIX: Create a functional index → CREATE INDEX ON users(LOWER(email))
+-- or store emails in lowercase at write time.
+```
+
+**Example 2 — The subquery trap:**
+```sql
+-- Developer writes this because it reads naturally:
+SELECT * FROM products
+WHERE category_id IN (SELECT id FROM categories WHERE active = 1)
+
+-- QueryForge rewrites it to:
+SELECT * FROM products
+JOIN categories ON products.category_id = categories.id
+WHERE categories.active = 1
+
+-- Why? The JOIN lets the database use indexes on both tables
+-- and pick an efficient join strategy (hash join, merge join).
+-- The subquery may re-execute for every outer row.
+```
+
+**Example 3 — The wildcard trap:**
+```sql
+-- This looks fine:
+WHERE email LIKE '%@gmail.com'
+
+-- But the % at the START means the database can't use
+-- the B-tree index on email — it has to read every single row.
+-- QueryForge flags this and explains why.
+```
+
+---
+
+### Who This Helps
+
+| Person | Problem | QueryForge Solution |
+|--------|---------|-------------------|
+| **Junior developer** | Doesn't know what makes SQL slow | Visual explanations per rule |
+| **Backend engineer** | Writing complex joins and subqueries | Auto-rewrites + diff view |
+| **DBA / Tech lead** | Reviewing PRs for performance issues | Instant optimization report |
+| **CS student** | Wants to understand database internals | Query plan tree + cost model |
+
+---
+
+### The Scale Where It Matters
+
+| Table Size | Bad Query | Optimized Query |
+|-----------|-----------|----------------|
+| 1,000 rows | 2ms | 1ms | — barely noticeable |
+| 100,000 rows | 200ms | 5ms | noticeable |
+| 1,000,000 rows | 8,000ms (8s) | 15ms | app-breaking vs instant |
+| 10,000,000 rows | timeout | 80ms | server crash vs fine |
+
+The optimization matters more at scale — which is exactly when you can't afford to fix it reactively.
+
+---
+
 ## 📖 Table of Contents
 
 - [What Does This Project Do?](#-what-does-this-project-do)
